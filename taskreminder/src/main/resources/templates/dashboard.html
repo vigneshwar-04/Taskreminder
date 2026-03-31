@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Task Dashboard</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<!-- MESSAGE -->
+<div th:if="${success}"
+     id="msg"
+     th:class="'message ' + (${type} == 'delete' ? 'msg-delete' : 'msg-success')">
+
+    <span th:text="${success}"></span>
+
+</div>
+
+<script>
+    setTimeout(function () {
+        var msg = document.getElementById("msg");
+        if (msg) msg.style.display = "none";
+    }, 10000);
+</script>
+
+<div class="container">
+
+    <h2>Task Dashboard</h2>
+
+    <!-- FORM (VERTICAL) -->
+    <div class="form-box">
+        <form action="/addTask" method="post">
+
+            <input type="text" name="title" placeholder="Task Title" required>
+
+            <input type="text" name="description" placeholder="Description" required>
+
+            <input type="datetime-local" name="dueDate" required>
+
+            <select name="status">
+                <option value="Pending">Pending</option>
+                <option value="Completed">Completed</option>
+            </select>
+
+            <button type="submit">Add Task</button>
+
+        </form>
+    </div>
+
+    <!-- TASK LIST -->
+    <div th:each="task : ${tasks}" class="card">
+
+        <h3 th:text="${task.title}"></h3>
+
+        <p th:text="${task.description}"></p>
+
+        <p>
+            Due Date:
+            <span th:text="${task.dueDate}"></span>
+        </p>
+
+        <p>
+            Status:
+            <span th:classappend="${task.status == 'Completed'} ? 'status-completed' : 'status-pending'"
+                  th:text="${task.status}">
+            </span>
+        </p>
+
+        <a th:href="@{'/delete/' + ${task.id}}" class="delete-btn">Delete</a>
+
+    </div>
+
+</div>
+
+</body>
+</html>
