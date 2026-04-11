@@ -1,7 +1,7 @@
 package com.example.taskreminder.service;
 
-import com.example.taskreminder.model.Taskmodel;
-import com.example.taskreminder.Repository.TaskRepository;
+import com.example.taskreminder.entity.Task;
+import com.example.taskreminder.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,19 +15,37 @@ public class TaskManager {
         this.repository = repository;
     }
 
-    public void addTask(Taskmodel task){
+    // ✅ GET ALL TASKS
+    public List<Task> getAllTasks() {
+        return repository.getAllTasks();
+    }
+
+    // ✅ FILTER
+    public List<Task> getTasksByStatus(String status) {
+        return repository.getTasksByStatus(status);
+    }
+
+    // ✅ ADD
+    public void addTask(Task task) {
         repository.addTask(task);
     }
 
-    public List<Taskmodel> getAllTasks(){
-        return repository.getTasks();
-    }
-
-    public void deleteTask(Long id){
+    // ✅ DELETE
+    public void deleteTask(Long id) {
         repository.deleteTask(id);
     }
 
-    public void updateTask(Long id, Taskmodel task){
-        repository.updateTask(id, task);
+    // ✅ UPDATE STATUS
+    public void updateStatus(Long id, String status) {
+        repository.updateStatus(id, status);
+    }
+
+    // ✅ COUNTS
+    public int countAll() {
+        return repository.countAll();
+    }
+
+    public int countByStatus(String status) {
+        return repository.countByStatus(status);
     }
 }

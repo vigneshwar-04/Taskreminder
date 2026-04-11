@@ -1,30 +1,30 @@
-package com.example.taskreminder.model;
+package com.example.taskreminder.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
-@Entity
-public class Taskmodel {
+public class TaskDTO {
 
-    @Id
     private Long id;
     private String title;
     private String description;
+    private String status; // Pending / Completed
     private LocalDateTime dueDate;
-    private String status;
+    private String email;
 
-    public Taskmodel() {}
+    // Constructors
+    public TaskDTO() {}
 
-    public Taskmodel(Long id, String title, String description,
-                     LocalDateTime dueDate, String status) {
+    public TaskDTO(Long id, String title, String description,
+                   String status, LocalDateTime dueDate, String email) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.dueDate = dueDate;
         this.status = status;
+        this.dueDate = dueDate;
+        this.email = email;
     }
 
+    // Getters & Setters
     public Long getId() {
         return id;
     }
@@ -49,6 +49,14 @@ public class Taskmodel {
         this.description = description;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public LocalDateTime getDueDate() {
         return dueDate;
     }
@@ -57,11 +65,11 @@ public class Taskmodel {
         this.dueDate = dueDate;
     }
 
-    public String getStatus() {
-        return status;
+    public String getEmail() {
+        return email;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

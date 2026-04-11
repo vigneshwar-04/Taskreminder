@@ -1,35 +1,33 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-    <title>Register</title>
-
-    <!-- Link External CSS -->
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta charset="UTF-8">
+    <title>TASKREMINDER - Register</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-
 <body>
 
-<div class="box">
-    <h2>Register</h2>
+<div class="container">
 
-    <form action="/register" method="post">
+    <div class="left">
+        <h1>Design your workflow, <span>track your progress.</span></h1>
+        <p>Manage tasks efficiently with smart reminders.</p>
+    </div>
 
-        <input type="text" name="name" placeholder="Enter Name" required>
+    <div class="right">
+        <h2>Create your account</h2>
 
-        <input type="email" name="email" placeholder="Enter Email" required>
+        <form action="/register" method="post">
+            <input type="text" name="name" placeholder="Full Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
 
-        <input type="password" name="password" placeholder="Enter Password" required>
+            <button type="submit">Create Account →</button>
+        </form>
 
-        <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+        <p class="link">Already have an account? <a href="/">Login</a></p>
+    </div>
 
-        <button type="submit">Register</button>
-
-        <p class="link">
-            Already have an account?
-            <a href="/login">Login</a>
-        </p>
-
-    </form>
 </div>
 
 </body>

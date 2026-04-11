@@ -1,19 +1,54 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Login</title>
-  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <meta charset="UTF-8">
+  <title>TASKREMINDER - Login</title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-<div class="box">
-  <h2>Login</h2>
+<div class="container">
 
-  <form action="/login" method="post">
-    <input type="text" name="name" placeholder="Enter Name" required>
-    <input type="email" name="email" placeholder="Enter Email" required>
-    <button type="submit">Login</button>
-  </form>
+  <div class="left">
+    <h1>Compose your workflow with <span>clarity.</span></h1>
+    <p>The digital workspace for managing your daily tasks easily.</p>
+  </div>
+
+  <div class="right">
+    <h2>Welcome back</h2>
+
+    <!-- NORMAL LOGIN -->
+    <form action="/doLogin" method="post">
+      <input type="email" name="email" placeholder="Email" required>
+      <input type="password" name="password" placeholder="Password" required>
+
+      <div class="options">
+        <label><input type="checkbox"> Remember me</label>
+        <a href="/forgot">Forgot password?</a>
+      </div>
+
+      <button type="submit">Sign In →</button>
+    </form>
+
+    <p class="link">New user? <a href="/register">Create Account</a></p>
+
+    <hr style="margin:20px 0;">
+
+    <!-- OTP LOGIN -->
+    <form action="/sendOtp" method="post">
+      <input type="email" name="email" placeholder="Enter Email for OTP" required>
+      <button type="submit">Login with OTP</button>
+    </form>
+
+    <!-- OTP VERIFY INPUT -->
+    <div th:if="${showOtp}">
+      <form action="/verifyOtp" method="post">
+        <input type="text" name="otp" placeholder="Enter OTP" required>
+        <button type="submit">Verify OTP</button>
+      </form>
+    </div>
+
+  </div>
 
 </div>
 

@@ -11,14 +11,18 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public void sendEmail(String to, String subject, String text) {
+    public void sendEmail(String to, String subject, String body) {
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("your-email@gmail.com"); // ✅ ADD THIS
+        message.setFrom("valevignesh2@gmail.com");
         message.setTo(to);
         message.setSubject(subject);
-        message.setText(text);
+        message.setText(body);
 
         mailSender.send(message);
+    }
+
+    public void sendOTP(String to, String otp) {
+        sendEmail(to, "Your OTP", "Your OTP is: " + otp);
     }
 }
