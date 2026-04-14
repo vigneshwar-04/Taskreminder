@@ -24,7 +24,7 @@ public class CustomTaskScheduler {
     @Scheduled(fixedRate = 60000)
     public void checkTasks() {
 
-        List<Task> tasks = taskRepository.getAllTasks();
+        List<Task> tasks = taskRepository.getTasksByEmail("valevignesh2@gmail.com");
 
         for (Task task : tasks) {
 
@@ -36,7 +36,7 @@ public class CustomTaskScheduler {
                 taskRepository.updateStatus(task.getId(), "OVERDUE");
 
                 emailService.sendEmail(
-                        "your_email@gmail.com",
+                        "valevignesh2@gmail.com",
                         "Task Overdue",
                         "Task '" + task.getTitle() + "' is overdue!"
                 );
@@ -45,12 +45,6 @@ public class CustomTaskScheduler {
                     !"COMPLETED".equalsIgnoreCase(task.getStatus())) {
 
                 taskRepository.updateStatus(task.getId(), "PENDING");
-
-                emailService.sendEmail(
-                        "your_email@gmail.com",
-                        "Task Pending",
-                        "Task '" + task.getTitle() + "' is still pending."
-                );
             }
         }
     }

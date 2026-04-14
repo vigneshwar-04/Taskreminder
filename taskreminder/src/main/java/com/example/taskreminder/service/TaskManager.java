@@ -15,37 +15,31 @@ public class TaskManager {
         this.repository = repository;
     }
 
-    // ✅ GET ALL TASKS
-    public List<Task> getAllTasks() {
-        return repository.getAllTasks();
+    public List<Task> getTasksByEmail(String email) {
+        return repository.getTasksByEmail(email);
     }
 
-    // ✅ FILTER
-    public List<Task> getTasksByStatus(String status) {
-        return repository.getTasksByStatus(status);
+    public List<Task> getTasksByStatus(String email, String status) {
+        return repository.getTasksByStatus(email, status);
     }
 
-    // ✅ ADD
-    public void addTask(Task task) {
-        repository.addTask(task);
+    public void addTask(Task task, String email) {
+        repository.addTask(task, email);
     }
 
-    // ✅ DELETE
     public void deleteTask(Long id) {
         repository.deleteTask(id);
     }
 
-    // ✅ UPDATE STATUS
     public void updateStatus(Long id, String status) {
         repository.updateStatus(id, status);
     }
 
-    // ✅ COUNTS
-    public int countAll() {
-        return repository.countAll();
+    public int countAll(String email) {
+        return repository.countAll(email);
     }
 
-    public int countByStatus(String status) {
-        return repository.countByStatus(status);
+    public int countByStatus(String email, String status) {
+        return repository.countByStatus(email, status);
     }
 }

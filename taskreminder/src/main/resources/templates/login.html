@@ -17,14 +17,13 @@
   <div class="right">
     <h2>Welcome back</h2>
 
-    <!-- NORMAL LOGIN -->
     <form action="/doLogin" method="post">
       <input type="email" name="email" placeholder="Email" required>
       <input type="password" name="password" placeholder="Password" required>
 
       <div class="options">
         <label><input type="checkbox"> Remember me</label>
-        <a href="/forgot">Forgot password?</a>
+        <a href="#forgot-section">Forgot password?</a>
       </div>
 
       <button type="submit">Sign In →</button>
@@ -32,15 +31,13 @@
 
     <p class="link">New user? <a href="/register">Create Account</a></p>
 
-    <hr style="margin:20px 0;">
+    <hr>
 
-    <!-- OTP LOGIN -->
     <form action="/sendOtp" method="post">
       <input type="email" name="email" placeholder="Enter Email for OTP" required>
       <button type="submit">Login with OTP</button>
     </form>
 
-    <!-- OTP VERIFY INPUT -->
     <div th:if="${showOtp}">
       <form action="/verifyOtp" method="post">
         <input type="text" name="otp" placeholder="Enter OTP" required>
@@ -48,6 +45,22 @@
       </form>
     </div>
 
+    <hr>
+
+    <div id="forgot-section">
+      <form action="/forgot" method="post">
+        <input type="email" name="email" placeholder="Enter Email for Reset" required>
+        <button type="submit">Send OTP</button>
+      </form>
+    </div>
+
+    <div th:if="${showReset}" style="margin-top:15px; border:1px solid #ccc; padding:10px;">
+      <form action="/resetPassword" method="post">
+        <input type="text" name="otp" placeholder="Enter OTP" required>
+        <input type="password" name="newPassword" placeholder="New Password" required>
+        <button type="submit">Reset Password</button>
+      </form>
+    </div>
   </div>
 
 </div>

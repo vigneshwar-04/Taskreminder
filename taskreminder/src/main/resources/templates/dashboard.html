@@ -79,7 +79,7 @@
             margin-bottom: 30px;
         }
 
-        .task-box input, .task-box textarea {
+        .task-box input, .task-box textarea, .task-box select {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -147,7 +147,7 @@
         </div>
 
         <div class="task-box">
-            <form action="/addTask" method="post">
+            <form action="/tasks/add" method="post">
 
                 <input type="hidden" name="id" th:value="${editTask != null ? editTask.id : ''}">
 
@@ -162,7 +162,6 @@
                 <input type="datetime-local" name="time"
                        th:value="${editTask != null ? editTask.time : ''}" required>
 
-
                 <select name="status" required>
                     <option value="PENDING"
                             th:selected="${editTask != null and editTask.status == 'PENDING'}">Pending</option>
@@ -175,19 +174,17 @@
                 </select>
 
                 <button type="submit">Add / Update Task</button>
-
             </form>
         </div>
 
-
         <div style="margin-bottom:15px;">
-            <a href="/dashboard">All</a> |
-            <a href="/filter?status=PENDING">Pending</a> |
-            <a href="/filter?status=COMPLETED">Completed</a> |
-            <a href="/filter?status=OVERDUE">Overdue</a>
+            <a href="/tasks/dashboard?filter=all">All</a> |
+            <a href="/tasks/dashboard?filter=pending">Pending</a> |
+            <a href="/tasks/dashboard?filter=completed">Completed</a> |
+            <a href="/tasks/dashboard?filter=overdue">Overdue</a>
         </div>
 
-        <a href="/export">
+        <a href="/tasks/export">
             <button style="margin-bottom:15px;">Export CSV</button>
         </a>
 

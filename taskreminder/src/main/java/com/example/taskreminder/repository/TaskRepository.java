@@ -15,18 +15,21 @@ public class TaskRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void addTask(Task task) {
-        String sql = "INSERT INTO tasks (title, description, time, status) VALUES (?, ?, ?, ?)";
+    public void addTask(Task task, String email) {
+        String sql = "INSERT INTO tasks (title, description, time, status, email) VALUES (?, ?, ?, ?, ?)";
+
         jdbcTemplate.update(sql,
                 task.getTitle(),
                 task.getDescription(),
                 java.sql.Timestamp.valueOf(task.getTime()),
-                task.getStatus());
+                task.getStatus(),
+                email);
     }
 
-    public List<Task> getAllTasks() {
-        String sql = "SELECT * FROM tasks ORDER BY id DESC";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+    public List<Task> getTasksByEmail(String email) {
+        String sql = "SELECT * FROM tasks WHERE email=? ORDER BY id DESC";
+
+        return jdbcTemplate.query(sql, new Object[]{email}, (rs, rowNum) -> {
             Task task = new Task();
             task.setId(rs.getLong("id"));
             task.setTitle(rs.getString("title"));
@@ -37,9 +40,10 @@ public class TaskRepository {
         });
     }
 
-    public List<Task> getTasksByStatus(String status) {
-        String sql = "SELECT * FROM tasks WHERE status=? ORDER BY id DESC";
-        return jdbcTemplate.query(sql, ps -> ps.setString(1, status), (rs, rowNum) -> {
+    public List<Task> getTasksByStatus(String email, String status) {
+        String sql = "SELECT * FROM tasks WHERE email=? AND status=? ORDER BY id DESC";
+
+        return jdbcTemplate.query(sql, new Object[]{email, status}, (rs, rowNum) -> {
             Task task = new Task();
             task.setId(rs.getLong("id"));
             task.setTitle(rs.getString("title"));
@@ -50,15 +54,19 @@ public class TaskRepository {
         });
     }
 
-    public int countAll() {
-        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM tasks", Integer.class);
+    public int countAll(String email) {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM tasks WHERE email=?",
+                new Object[]{email},
+                Integer.class
+        );
         return count != null ? count : 0;
     }
 
-    public int countByStatus(String status) {
+    public int countByStatus(String email, String status) {
         Integer count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM tasks WHERE status=?",
-                new Object[]{status},
+                "SELECT COUNT(*) FROM tasks WHERE email=? AND status=?",
+                new Object[]{email, status},
                 Integer.class
         );
         return count != null ? count : 0;

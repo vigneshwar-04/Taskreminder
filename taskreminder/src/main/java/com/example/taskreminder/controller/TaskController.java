@@ -10,6 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.PrintWriter;
 import java.util.List;
 
 @Controller
@@ -22,12 +25,10 @@ public class TaskController {
     @Autowired
     private EmailService emailService;
 
-    // 🔐 COMMON SESSION CHECK METHOD (CLEAN WAY)
     private boolean isNotLoggedIn(HttpSession session) {
         return (session == null || session.getAttribute("userEmail") == null);
     }
 
-    // ✅ DASHBOARD
     @GetMapping("/dashboard")
     public String dashboard(@RequestParam(defaultValue = "all") String filter,
                             Model model,
@@ -37,57 +38,58 @@ public class TaskController {
             return "redirect:/login";
         }
 
+        String email = (String) session.getAttribute("userEmail");
+
         List<Task> tasks;
 
         switch (filter.toLowerCase()) {
             case "pending":
-                tasks = taskRepository.getTasksByStatus("Pending");
+                tasks = taskRepository.getTasksByStatus(email, "PENDING");
                 break;
             case "completed":
-                tasks = taskRepository.getTasksByStatus("Completed");
+                tasks = taskRepository.getTasksByStatus(email, "COMPLETED");
                 break;
             case "overdue":
-                tasks = taskRepository.getTasksByStatus("Overdue");
+                tasks = taskRepository.getTasksByStatus(email, "OVERDUE");
                 break;
             default:
-                tasks = taskRepository.getAllTasks();
+                tasks = taskRepository.getTasksByEmail(email);
         }
 
         model.addAttribute("tasks", tasks);
-        model.addAttribute("total", taskRepository.countAll());
-        model.addAttribute("completed", taskRepository.countByStatus("Completed"));
-        model.addAttribute("pending", taskRepository.countByStatus("Pending"));
-        model.addAttribute("overdue", taskRepository.countByStatus("Overdue"));
+        model.addAttribute("total", taskRepository.countAll(email));
+        model.addAttribute("completed", taskRepository.countByStatus(email, "COMPLETED"));
+        model.addAttribute("pending", taskRepository.countByStatus(email, "PENDING"));
+        model.addAttribute("overdue", taskRepository.countByStatus(email, "OVERDUE"));
 
         return "dashboard";
     }
 
-    // ✅ ADD TASK
     @PostMapping("/add")
     public String addTask(@ModelAttribute Task task,
-                          @RequestParam String email,
                           HttpSession session) {
 
         if (isNotLoggedIn(session)) {
             return "redirect:/login";
         }
 
+        String email = (String) session.getAttribute("userEmail");
+
         if (task.getStatus() == null || task.getStatus().isEmpty()) {
-            task.setStatus("Pending");
+            task.setStatus("PENDING");
         }
 
-        taskRepository.addTask(task);
+        taskRepository.addTask(task, email);
 
         emailService.sendEmail(
                 email,
-                "Task Reminder",
+                "Task Added",
                 "Your task '" + task.getTitle() + "' added successfully!"
         );
 
         return "redirect:/tasks/dashboard";
     }
 
-    // ✅ UPDATE STATUS
     @GetMapping("/updateStatus/{id}")
     public String updateStatus(@PathVariable Long id,
                                @RequestParam String status,
@@ -102,7 +104,6 @@ public class TaskController {
         return "redirect:/tasks/dashboard";
     }
 
-    // ✅ DELETE TASK
     @GetMapping("/delete/{id}")
     public String deleteTask(@PathVariable Long id,
                              HttpSession session) {
@@ -114,5 +115,33 @@ public class TaskController {
         taskRepository.deleteTask(id);
 
         return "redirect:/tasks/dashboard";
+    }
+
+    @GetMapping("/export")
+    public void exportCSV(HttpServletResponse response,
+                          HttpSession session) throws Exception {
+
+        if (session.getAttribute("userEmail") == null) {
+            response.sendRedirect("/login");
+            return;
+        }
+
+        String email = (String) session.getAttribute("userEmail");
+
+        response.setContentType("text/csv");
+        response.setHeader("Content-Disposition", "attachment; filename=tasks.csv");
+
+        PrintWriter writer = response.getWriter();
+
+        writer.println("Title,Description,Time,Status");
+
+        for (Task task : taskRepository.getTasksByEmail(email)) {
+            writer.println(task.getTitle() + "," +
+                    task.getDescription() + "," +
+                    task.getTime() + "," +
+                    task.getStatus());
+        }
+
+        writer.flush();
     }
 }
